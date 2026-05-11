@@ -1,0 +1,238 @@
+body {
+    background-color: rgb(229, 229, 235);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+h2 {
+    text-align: center;
+    color: #2F3640;
+    margin-bottom: 20px;
+}
+
+/*--------- Zone En-Tête ------------------------------------------------*/
+header {
+    display: flex;
+    justify-content: space-between;     /* Écarte le logo, le titre et l'adresse */
+    align-items: center;                /* Centre les éléments verticalement */
+    background-color: rgb(10, 10, 108);
+    color: whitesmoke; 
+    margin: 10px 0;
+    padding: 15px 40px;
+
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25); /* Légère ombre portée sous le menu */
+}
+
+.imglink {
+    display: flex;            /* Évite les marges fantômes sous l'image */
+}
+
+
+.imglink:hover img {           /* L'effet de "Pop" quand la souris passe dessus */
+    transform: scale(1.05);
+}
+
+.titreDocument {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-transform: uppercase; /* Met le titre en majuscules */
+    letter-spacing: 1px;
+}
+
+.adresseMagasin img {
+    filter: brightness(0) invert(0.96); /* Transforme en noir, puis inverse en blanc, puis réduit un peu la luminosité pour faire "whitesmoke" */
+}
+.adresseMagasin {
+    display: flex;
+    align-items: center;
+    gap: 8px;                  /* Crée un petit espace entre l'icône SVG et le texte */
+    font-style: normal;        /* Enlève l'italique mis par défaut par le navigateur sur la balise <address> */
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/*--------- Zone Pied de Page ------------------------------------------------*/
+footer {
+    display: flex;
+    align-items: center; 
+    background-color: rgb(10, 10, 108);
+    color: whitesmoke; 
+    margin: 10px 0;
+    padding: 15px 40px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+/*--------- Zone de Recherche ------------------------------------------------*/
+.barreDeRecherche {
+    display: flex;
+    justify-content: center; 
+    gap: 10px;                 /* Crée un espace pour que texte et bouton ne se touchent pas */
+    margin: 25px 0;            /* Écarte la barre du plan en dessous */
+}
+
+
+#saisieUtilisateur { 
+    padding: 10px 15px;        /* Laisse l'espace "respirer" autour du texte */
+    font-size: 1.1rem;         /* Texte assez grand pour une lecture facile */
+    border: 2px solid #74706c; /* Reprend ton gris-bleu doux */
+    border-radius: 8px;        /* Arrondit les angles */
+    width: 300px;              /* Empêche le champ d'être trop petit ou trop grand */
+}
+
+
+#boutonDeRecherche { 
+    background-color: rgb(10, 10, 108);
+    color: whitesmoke;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;  /* Pour un changement de couleur fluide */
+}
+
+#boutonDeRecherche:hover {   /* Effet quand on passe dessus */
+    background-color: rgb(20, 20, 150);
+}
+
+#boutonDeRecherche:active {  /* Effet quand on clique (pression) */
+    transform: scale(0.95);  /* Le bouton s'enfonce légèrement */
+}
+
+/*--------- Mise en forme du Plan ------------------------------------------------*/
+.magasinContainer {
+    display: grid;
+    position: relative;
+    grid-template-columns: repeat(68, 10px); 
+    width: fit-content;
+    margin: 0 auto 40px auto;                     /* Pour centrer le plan au milieu de l'écran */
+    border: 4px solid #2F3640;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.35);
+}
+
+
+.iconeBorne {
+    position: absolute; /* Sort du plan et flotte au-dessus ☁️ */
+    
+    /* On la pousse par rapport au bord en haut à gauche du magasinContainer */
+    top: 915px;  /* On pousse vers le bas ⬇*/
+    left: 300px; /* On pousse vers la droite */
+    
+    width: 40px; /* Ajuste la taille si besoin */
+    height: auto;
+    z-index: 10; /* Assure que la borne passe bien AU-DESSUS des cases 🥞 */
+
+    background-color: chocolate;
+    padding: 1px;
+    border-radius: 50%;
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.4);
+
+    animation: battement 2s infinite;
+}
+
+.iconeParking {
+    position: absolute;
+    top: 20px;
+    left:620px;
+    width: 25px;
+    height: auto;
+    z-index: 10;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.4);
+}
+
+.logoLaMadeleine {
+    position: absolute;
+    top: 1040px;
+    left: 50px;
+    width: auto;
+    height: 35px;
+    z-index: 10;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.4);
+}
+
+.tooltipMagasin {
+    position: absolute;
+    padding: 8px;
+    background-color: rgba(47, 54, 64, 0.9);
+    color: white;
+    border-radius: 5px;
+    pointer-events: none; /* TRÈS IMPORTANT : la souris passe "à travers" pour ne pas bloquer le survol des cases */
+    display: none; /* Cachée par défaut */
+    z-index: 1000; /* Pour être sûre qu'elle passe au-dessus de la borne et du plan */
+}
+.black, .rayon, .parquet, .moquette, .galerie,.bois, .borderLeft {
+    width: 10px;
+    height: 10px;
+}
+
+
+
+.borderTop, .borderBottom {
+    width: 10px;
+    height: 8.4px;
+}
+
+.borderTop {
+    border-top: 2px solid black;
+    background-color: #ffe6b7; 
+}
+
+.borderBottom {
+    border-bottom: 2px solid black;
+    background-color: #ffe6b7; 
+}
+
+.borderLeft {
+    border-left: 2px solid black;
+    background-color: #ffe6b7; 
+}
+
+.black {
+    background-color: #2F3640; 
+}
+
+
+.rayon {
+    cursor: pointer;
+    background-color: #74706c;
+    transition: background-color 0.2s;
+}
+.rayon:hover {
+    background-color: #a09c98;
+}
+
+.bois {
+    cursor: pointer;
+    background-color: burlywood;
+    transition: background-color 0.2s;
+}
+
+.bois:hover {
+    background-color: #edc9af;
+}
+
+.parquet {
+    background-color: #ffe6b7; /* Un blanc cassé très reposant pour les yeux */
+}
+
+.moquette {
+    background-color: rgb(168, 168, 190);
+}
+
+.galerie {
+    background-color: #d0aad1; 
+}
+
+
+.trajetAllume {
+    background-color: yellow; /* La case devient jaune */
+    box-shadow: 0 0 10px yellow; /* Elle semble briller */
+    transition: background-color 0.5s; /* Pour un effet plus doux */
+}
+
+
+
+@keyframes battement { /*Animation de maBorne */
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); } /* Grossit de 10% */
+    100% { transform: scale(1); }
+}
