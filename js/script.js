@@ -40,6 +40,7 @@ const casesActualitésMur = [
 etiqueterRayon(casesActualitésMur, "📚 Actualités");
 
 
+//LIBRAIRIE----------------------------------------------------
 const casesLittérature = [
     "z3130", "z3242", "z3355",
     "z3467", "z3464", "z3463", "z3462", "z3461",
@@ -208,6 +209,35 @@ const casesBd = [
 ];
 etiqueterRayon(casesBd, "📚 Bandes Dessinés");
 
+//MVLN ------------------------------------------------------
+const casesMusique = [
+    "z5163", "z6162", "z5161", "z5160", "z5159", "z5158", "z5157", "z5156", "z5155", "z5157",
+    "z5041", "z4929", "z4817", "z4705", "z4593", "z4483",
+    "z4257", "z4145", "z4033", "z3924", "z3809", "z3697",
+    "z3587", "z3588", "z3589", "z3590", "z3591", "z3592", "z3593", "z3594", "z3595", "z3596",
+    "z3929", "z3928", "z4041", "z4040",
+    "z3925", "z3924", "z4037", "z4036",
+    "z4265", "z4264", "z4377", "z4376",
+    "z4261", "z4260", "z4373", "z4372",
+    "z4715", "z4714", "z4713", "z4712", "z4711", "z4710", "z4709", "z4708",
+    "z4827", "z4826", "z4825", "z4824", "z4823", "z4822", "z4821", "z4820"
+];
+etiqueterRayon(casesMusique, "🎶 CD & Vinyles");
+
+const casesVideo = [
+    "z3834", "z3946", "z4058", "z4170", "z4282", "z4394", "z4506", "z4618", "z4730", "z4842", "z4954",
+    "z5066", "z5178", "z5290", "z5402", "z5514", "z5626", "z5738",
+    "z4503", "z4502", "z4501", "z4500",
+    "z4615", "z4614", "z4613", "z4612",
+    "z5063", "z5062", "z5061", "z5060",
+    "z5175", "z5174", "z5173", "z5172",
+    "z5287", "z5286",
+    "z5399", "z5398",
+    "z5511", "z5510",
+    "z5623", "z5627"
+];
+etiqueterRayon(casesVideo, "🎞️ Vidéo");
+
 const casesGaming = [
    "z6427", "z6539", "z6651", "z6763", "z6875", "z6987", "z7099", "z7211", "z7323", "z7435",
    "z7546", "z7545", "z7543",
@@ -225,8 +255,137 @@ const casesLicense = [
 ];
 etiqueterRayon(casesLicense, "🪅 Collector");
 
+const casesInstrumentsMusique = [
+    "z5275", "z5274", "z5273", "z5272", "z5271", "z5270", "z5269", "z5268", "z5267",
+    "z5378", "z5490", "z5603", "z5715", "z5828", "z5940",
+    "z6165", "z6277", "z6390", "z6502", "z6615", "z6727",
+    "z5610", "z5609", "z5608", "z5607",
+    "z5722", "z5721", "z5720", "z5719"
+];
+etiqueterRayon(casesInstrumentsMusique, "🎸 Instruments de Musique");
 
+//PCE PAPETERIE ----------------------------------------------------
+const casesInformatiqueAcess = [
+    "z0002", "z0003",
+];
+etiqueterRayon(casesInformatiqueAcess, "💾 Informatiques Accessoires");
 
+const casesCartouchesImprimante = [
+    "z0113", "z0225"
+];
+etiqueterRayon(casesCartouchesImprimante, "🖨️ Cartouches pour Imprimante");
+
+const casesPapiersImprimante = [
+    "z0341", "z0453", "z0565", "z0677",
+    "z0345", "z0457", "z0569", "z0681"
+];
+etiqueterRayon(casesPapiersImprimante, "📄 Papiers pour Imprimante");
+
+const casesPapeterieFantaisie = [
+    "z1133", "z1021", "z0909", "z0797", "z0685", "z0573", "z0461", "z0349", "z0237", "z0125",
+    "z0012", "z0011", "z0010", "z0009", "z0008"
+];
+etiqueterRayon(casesPapeterieFantaisie, "📔 Papeterie & EcritureFantaisie");
+
+const casesBureauAmenagement= [
+    "z0007", "z0006", "z0005", "z0004"
+];
+etiqueterRayon(casesBureauAmenagement, "🗄️ Aménagement Bureau");
+
+const casesAgendas= [
+    "z0346", "z0458", "z0570", "z0682"
+];
+etiqueterRayon(casesBureauAmenagement, "🗄️ Gestion du temps");
+
+const casesBagagerie = [
+    "z0340", "z0452", "z0564", "z676",
+    "z1234", "z1346", "z1458", "z1570"
+];
+etiqueterRayon(casesBagagerie, "💼 Bagagerie");
+
+const casesEcritureLuxe = [
+    "z1682", "z1794"
+];
+etiqueterRayon(casesEcritureLuxe, "✒️ Ecriture de Luxe");
+
+const casesClassement = [
+    "z1906", "z2018", "z2130", "z2242", "z2354",
+    "z2466", "z2466", "z2578", "z2690", "z2802", "2914"
+];
+etiqueterRayon(casesClassement, "🗃️ Classement & Protection");
+
+const casesCahiers = [
+    "z3026", "z3138", "z3250", "z3362",
+    "z3484", "z3483", "z3482", "z3481", "z3480", "z3479", "z3478", "z3477", "z3476", "z3475"
+];
+etiqueterRayon(casesCahiers, "📒 Supports Papiers Scolaires");
+
+const casesEcriture = [
+    "z2698", "z2684", "z2696", "z2695", "z2694", "z2693",
+    "z2586", "z2585", "z2584", "z2583", "z2582", "z2581",
+    "z2250", "z2249", "z2248", "z2247", "z2246", "z2245",
+    "z2138", "z2137", "z2136", "z2135", "z2134", "z2133"
+];
+etiqueterRayon(casesEcriture, "🖋️ Ecriture");
+
+const casesFournitures = [
+    "z1802", "z1801", "z1800", "z1799", "z1798", "z1797",
+    "z1242", "z1241", "z1240", "z1239", "z1238", "z1237"
+];
+etiqueterRayon(casesFournitures, "🖇️ Fournitures & Accessoires");
+
+const casesColoriage = [
+    "z1690", "z1689", "z1688", "z1687", "z1686", "z1685",
+    "z1354", "z1353", "z1352", "z1351", "z1350", "z1349"
+];
+etiqueterRayon(casesColoriage, "🖍️ Dessin & Coloriage");
+
+//PCE JEUNESSE ----------------------------------------------------
+const casesConstruction1Puzzles = [
+    "z2723", "z2835", "z2947", "z3059", "z3171", "z3283",
+    "z3719", "z2831", "z2943", "z3055", "z3167", "z3279",
+    "z2718", "z2830", "z2942", "z3054", "z3166", "z3278",
+    "z3614", "z3726", "z4062", "z4061", "z4060",
+    "z3947", "z3835", "z3723", "z3611",
+    "z2490", "z2602", "z2714", "z2826", "z2938", "z3050", "z3162", "z3274", "z3386", "z3498"
+];
+etiqueterRayon(casesConstruction1Puzzles, "🧩 Jeux de construction & Puzzles");
+
+const casesJeuxSociété = [
+    "z2505", "z2617", "z2729", "z2841", "z2953", "z3065", "z3177", "z3289",
+    "z3401", "z3513", "z3625", "z3737", "z3849", "z3961", "z4072", "z4073",
+    "z4070", "z4069", "z4068", "z4067", "z4066", "z4065", "z4064", "z4063",
+    "z3727", "z3615",
+    "z3731", "z3619", "z3507", "z3395",
+    "z3732", "z3620", "z3508", "z3396", "z3284", "z3172", "z3060", "z2948", "z2836", "z2724"
+];
+etiqueterRayon(casesJeuxSociété, "🎲 Jeux de Société");
+
+const casesCreationEveil = [
+    "z2631", "z2743", "z2855", "z2967", "z3079", "z3191", "z3303", "z3415", "z3751", "z3863", "z3975",
+    "z4086", "z4085", "z4084", "z4083", "z4082", "z4081", "z4080", "z4079", "z4078", "z4077", "z4076", "z7075",
+    "z3962", "z3850", "z3738", "z3626", "z3514", "z3402", "z3290", "z3178", "z3066", "z2954", "z2842", "z2730", "z2618", "z2506",
+    "z2733", "z2845", "z2957", "z3069", "z3181", "z3293", "z3405", "z3517", "z3629", "z3741",
+    "z2734", "z2846", "z2958", "z3070", "z3182", "z3294", "z3406", "z3518", "z3630", "z3742",
+    "z2738", "z2850", "z2962", "z3074", "z3186", "z3298", "z3410", "z3522",
+    "z3739", "z3851", "z2963", "z3075", "z3187", "z3299", "z3411", "z3523"
+];
+etiqueterRayon(casesCreationEveil, "🫟 Ludo Création Eveil");
+
+//PCE LOISIRS CREATIFS ----------------------------------------------------
+
+//PCE BEAUX-ARTS ----------------------------------------------------
+const casesSupportsToiles = [
+    "z2996", "z3108", "z3220", "z3332", "z3444", "z3556", "z3668", "z3780", "z3892", "z4004",
+    "z2768", "z2880", "z2992", "z3104", "z3216", "z3328",
+    "z2767", "z2879", "z2991", "z3103", "z3215", "z3327",
+];
+etiqueterRayon(casesSupportsToiles, "🎨 Châssis & Cartons Toilés");
+
+const casesArtsGraphiques = [
+
+];
+etiqueterRayon(casesArtsGraphiques, "🎨 Arts Graphiques");
 
 const casesInterdit = [
     "z6944", "z6943", "z6942", "z6941", "z6940", "z6939", "z6938", "z6937", "z6936", "z6935", "z6934",
