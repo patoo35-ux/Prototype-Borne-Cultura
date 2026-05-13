@@ -114,18 +114,12 @@ footer {
     position: absolute; /* Sort du plan et flotte au-dessus ☁️ */
     
     /* On la pousse par rapport au bord en haut à gauche du magasinContainer */
-    top: 915px;  /* On pousse vers le bas ⬇*/
-    left: 300px; /* On pousse vers la droite */
-    
-    width: 40px; /* Ajuste la taille si besoin */
+    top: 930px;  /* On pousse vers le bas ⬇*/
+    left: 180px; /* On pousse vers la droite */
+    width: 30px; /* Ajuste la taille si besoin */
     height: auto;
     z-index: 10; /* Assure que la borne passe bien AU-DESSUS des cases 🥞 */
-
-    background-color: chocolate;
-    padding: 1px;
-    border-radius: 50%;
-    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.4);
-
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.4);
     animation: battement 2s infinite;
 }
 
