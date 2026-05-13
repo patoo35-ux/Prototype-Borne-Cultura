@@ -123,6 +123,26 @@ footer {
     animation: battement 2s infinite;
 }
 
+.iconeCaissesAutomatiques {
+    position: absolute;
+    top: 790px; /* On pousse vers le bas ⬇*/
+    left:150px;
+    width: 50px;
+    height: auto;
+    z-index: 10;
+   
+}
+
+.iconeCaissesLigne {
+    position: absolute;
+    top: 850px; /* On pousse vers le bas ⬇*/
+    left:50px;
+    width: 120px;
+    height: auto;
+    z-index: 10;
+   
+}
+
 .iconeParking {
     position: absolute;
     top: 20px;
