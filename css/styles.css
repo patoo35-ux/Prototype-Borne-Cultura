@@ -109,6 +109,16 @@ footer {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.35);
 }
 
+.imgAccueilMagasin {
+    position: absolute;
+    top: 865px; /* On pousse vers le bas ⬇*/
+    left: 250px;
+    width: 80px;
+    height: auto;
+   border-radius: 40%;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+}
 
 .iconeBorne {
     position: absolute; /* Sort du plan et flotte au-dessus ☁️ */
