@@ -31,11 +31,21 @@
 
     <main>
 <!----------- Zone de recherche -------------------------------------------------->        
+<button id="boutonFlottant" onclick="ouvrirPopup()">🔍</button>
+
+<div id="popupRecherche" class="fenetre-modal">
+    <div class="contenu-modal">
+        <span class="croixFermer" onclick="fermerPopup()">&times;</span>
+        
+        <h3 style="color: #2F3640; margin-top: 0;">Que cherchez-vous ? 🗺️</h3>
+        
         <div class="barreDeRecherche">
-            <input type="text" id="saisieUtilisateur" placeholder="Que cherchez-vous ?">
-            <button id="boutonDeRecherche" onclick="lancerRecherche()">🔍 Trouver le chemin</button>
-            <p id="messageInfo"></p> <!-- Pour afficher "Produit non trouvé" ou "Suivez le guide" -->
+            <input type="text" id="saisieUtilisateur" placeholder="Un produit, un rayon..." list="suggestionsRayons">
+            <button id="boutonChercher" onclick="lancerRecherche()">Trouver le chemin</button>
+            <p id="messageInfo"></p>
         </div>
+    </div>
+</div>
 
 <!----------- Mise en forme du Plan -------------------------------------------------->
         <div class="magasinContainer">
