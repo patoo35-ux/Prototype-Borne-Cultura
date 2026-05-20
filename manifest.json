@@ -1,0 +1,17 @@
+{
+  "name": "Cultura Plan Magasin",
+  "short_name": "Cultura Plan",
+  "description": "GPS interactif pour le magasin Cultura de Saint-Malo",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0a0a6c",
+  "theme_color": "#0a0a6c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./img/logo_cultura.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
