@@ -10,6 +10,10 @@ h2 {
 
 /*--------- Zone En-Tête ------------------------------------------------*/
 header {
+    position: sticky; /* 1. Transforme la boîte en élément collant */
+    top: 0;           /* 2. se coller à 0 pixel du haut de l'écran */
+    z-index: 4000;    /* 3. TRÈS IMPORTANT : S'assure qu'il passe AU-DESSUS du plan et des info-bulles*/
+    height: 150px;
     display: flex;
     justify-content: space-between;     /* Écarte le logo, le titre et l'adresse */
     align-items: center;                /* Centre les éléments verticalement */
@@ -17,8 +21,7 @@ header {
     color: whitesmoke; 
     margin: 10px 0;
     padding: 15px 40px;
-
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25); /* Légère ombre portée sous le menu */
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.25);
 }
 
 .imglink {
@@ -58,45 +61,59 @@ footer {
     color: whitesmoke; 
     margin: 10px 0;
     padding: 15px 40px;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.1);
 }
 /*--------- Zone de Recherche ------------------------------------------------*/
-.barreDeRecherche {
-    display: flex;
-    justify-content: center; 
-    gap: 10px;                 /* Crée un espace pour que texte et bouton ne se touchent pas */
-    margin: 25px 0;            /* Écarte la barre du plan en dessous */
-}
-
-
-#saisieUtilisateur { 
-    padding: 10px 15px;        /* Laisse l'espace "respirer" autour du texte */
-    font-size: 1.1rem;         /* Texte assez grand pour une lecture facile */
-    border: 2px solid #74706c; /* Reprend ton gris-bleu doux */
-    border-radius: 8px;        /* Arrondit les angles */
-    width: 300px;              /* Empêche le champ d'être trop petit ou trop grand */
-}
-
-
-#boutonDeRecherche { 
-    background-color: rgb(10, 10, 108);
-    color: whitesmoke;
-    font-size: 1.1rem;
-    padding: 10px 20px;
+/* 1. Le bouton rond qui flotte en bas à droite */
+#boutonFlottant {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: chocolate;
+    color: white;
+    font-size: 26px;
     border: none;
-    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     cursor: pointer;
-    transition: background-color 0.3s;  /* Pour un changement de couleur fluide */
+    z-index: 5000; /* Passe au-dessus du plan et du header */
 }
 
-#boutonDeRecherche:hover {   /* Effet quand on passe dessus */
-    background-color: rgb(20, 20, 150);
+/* 2. Le fond noir transparent qui couvre tout l'écran */
+.fenetre-modal {
+    display: none; /* Invisible par défaut */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fond sombre */
+    z-index: 6000; /* Au-dessus du bouton flottant */
+    justify-content: center;
+    align-items: center;
 }
 
-#boutonDeRecherche:active {  /* Effet quand on clique (pression) */
-    transform: scale(0.95);  /* Le bouton s'enfonce légèrement */
+/* 3. La boîte blanche au milieu de l'écran */
+.contenu-modal {
+    background-color: white;
+    padding: 25px;
+    border-radius: 15px;
+    width: 85%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.5);
 }
+
+/* 4. Le bouton de fermeture (la croix) */
+.croixFermer {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 30px;
+    color: #aaa;
+    cursor: pointer;
+}
+.croixFermer:hover { color: black; }
 
 /*--------- Mise en forme du Plan ------------------------------------------------*/
 .magasinContainer {
@@ -108,6 +125,7 @@ footer {
     border: 4px solid #2F3640;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.35);
 }
+
 
 .iconeBorne {
     position: absolute; /* Sort du plan et flotte au-dessus ☁️ */
@@ -166,7 +184,6 @@ footer {
     z-index: 10;
 }
 
-
 .imgEntreeMagasin {
     position: absolute;
     top: 990px;
@@ -174,6 +191,7 @@ footer {
     width: 90px;
     height: auto;
     z-index: 10;
+   
 }
 
 .iconeCaissesAutomatiques {
@@ -242,14 +260,12 @@ footer {
     border-radius: 5px;
     pointer-events: none; /* TRÈS IMPORTANT : la souris passe "à travers" pour ne pas bloquer le survol des cases */
     display: none; /* Cachée par défaut */
-    z-index: 1000; /* Pour être sûre qu'elle passe au-dessus de la borne et du plan */
+    z-index: 4000; /* Pour être sûre qu'elle passe au-dessus de la borne et du plan */
 }
 .black, .rayon, .parquet, .moquette, .galerie,.bois, .borderLeft {
     width: 10px;
     height: 10px;
 }
-
-
 
 .borderTop, .borderBottom {
     width: 10px;
@@ -274,7 +290,6 @@ footer {
 .black {
     background-color: #2F3640; 
 }
-
 
 .rayon {
     cursor: pointer;
@@ -309,8 +324,8 @@ footer {
 
 
 .trajetAllume {
-    background-color: yellow; /* La case devient jaune */
-    box-shadow: 0 0 10px yellow; /* Elle semble briller */
+    background-color: chocolate; /* La case devient jaune */
+    box-shadow: 0 0 10px chocolate; /* Elle semble briller */
     transition: background-color 0.5s; /* Pour un effet plus doux */
 }
 
@@ -320,4 +335,68 @@ footer {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); } /* Grossit de 10% */
     100% { transform: scale(1); }
+}
+
+
+
+/* ==========================================================================
+   ADAPTATION MOBILE (Écrans de moins de 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    
+    /* 1. On réduit la taille de l'en-tête pour libérer l'écran */
+    header {
+        height: auto;
+        flex-direction: column;   /* Aligne le logo, titre et adresse à la verticale */
+        gap: 8px;
+        padding: 10px 15px;
+    }
+
+    .titreDocument {
+        font-size: 1.4rem;        /* Titre plus petit */
+        margin: 5px 0;
+        text-align: center;
+    }
+
+    .adresseMagasin {
+        font-size: 0.9rem;
+    }
+
+    /* 2. On adapte la zone de texte sous l'en-tête */
+    .titreRayon {
+        font-size: 1.1rem;
+        padding: 0 10px;
+    }
+
+    /* 3. LA MAGIE POUR LE PLAN : Défilement tactile fluide 🗺️ */
+    main {
+        width: 100%;
+        overflow: auto;           /* Active les barres de défilement si le plan déborde */
+        overflow-x: auto;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch; /* Défilement ultra-fluide au doigt sur iPhone/Safari */
+        padding: 5px;
+        box-sizing: border-box;
+    }
+
+    /* Si ton plan est enveloppé dans une table ou une div spécifique (ex: .grille) */
+    /* On s'assure qu'il garde sa taille d'origine pour pouvoir zoomer/glisser dedans */
+    table, .grilleMagasin { 
+        margin: 0 auto;
+    }
+
+    /* 4. On empile les éléments de recherche pour qu'ils prennent toute la largeur */
+    .barreDeRecherche {
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        margin: 15px auto;
+        gap: 10px;
+    }
+
+    #saisieUtilisateur, #boutonChercher {
+        width: 100% !important;   /* Force les éléments à occuper toute la largeur du téléphone */
+        height: 45px;             /* Plus haut pour que ce soit facile de cliquer avec le pouce */
+        box-sizing: border-box;
+    }
 }
