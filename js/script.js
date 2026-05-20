@@ -1,482 +1,120 @@
 //alert();
 
-// On crée la bulle une seule fois au début du script
-const bulle = document.createElement("div");
-bulle.className = "tooltipMagasin";
-document.body.appendChild(bulle);
+// Fonction pour charger les rayons automatiquement au démarrage
+fetch('data/listeRayons.html') // 1. Va chercher le fichier externe
+    .then(reponse => reponse.text()) // 2. Extrait le texte HTML qu'il contient
+    .then(htmlOptions => {
+        // 3. Injecte ce texte directement dans la datalist
+        document.getElementById('suggestionsRayons').innerHTML = htmlOptions;
+    })
+    .catch(erreur => console.error("Erreur lors du chargement des rayons :", erreur));
 
-function etiqueterRayon(listeIds, nomDuRayon) {
-    listeIds.forEach(id => {
-        const maCase = document.getElementById(id);
-        
-        if (maCase) {
-            // On prépare la case
-            maCase.style.cursor = "pointer";
+// FONCTION RECHERCHER UN PRODUIT ----------------------------------------------------
+function lancerRecherche() {
+    const champSaisie = document.getElementById("saisieUtilisateur");
+    const messageInfo = document.getElementById("messageInfo");
+    
+    // 1. Vérification si le champ est vide
+    if (champSaisie.value === "") {
+        messageInfo.textContent = "Quel rayon recherchez-vous ? ✍️";
+        messageInfo.style.color = "orange";
+        return; 
+    }
 
-            // Quand la souris arrive
-            maCase.addEventListener("mouseenter", () => {
-                bulle.textContent = nomDuRayon;
-                bulle.style.display = "block";
-            });
+    // 2. Nettoyage du texte (minuscules, espaces, accents)
+    let texteTape = champSaisie.value
+        .toLowerCase()
+        .trim()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
 
-            // Quand la souris bouge sur la case
-            maCase.addEventListener("mousemove", (e) => {
-                bulle.style.left = (e.pageX + 15) + "px";
-                bulle.style.top = (e.pageY + 15) + "px";
-            });
+// 3. L'inspecteur part à la recherche dans la base de données 🔍
+    
+    // PRIORITÉ 1 : On cherche d'abord dans les noms de RAYONS
+    let produitTrouve = produitsCultura.find(produit => {
+        let nomRayon = produit.rayon.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        return nomRayon.includes(texteTape);
+    });
 
-            // Quand la souris part
-            maCase.addEventListener("mouseleave", () => {
-                bulle.style.display = "none";
+    // PRIORITÉ 2 : Si on n'a trouvé aucun rayon, on cherche dans les noms de PRODUITS
+    if (!produitTrouve) {
+        produitTrouve = produitsCultura.find(produit => {
+            let nomProduit = produit.nom.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return nomProduit.includes(texteTape);
+        });
+    }
+
+    // 4. Affichage et allumage
+    if (produitTrouve) {
+        fermerPopup(); // Ferme la fenêtre pour laisser voir le chemin !
+        messageInfo.textContent = "Suivez le guide ! Direction le rayon : " + produitTrouve.rayon;
+        messageInfo.style.color = "chocolate"; 
+
+        // A. On nettoie l'ancienne recherche (on éteint tout) 🧽
+        document.querySelectorAll(".trajetAllume").forEach(caseAllumee => {
+            caseAllumee.classList.remove("trajetAllume");
+        });
+
+        // B. On allume la/les case(s) du produit 🎯
+        let listeDesCasesProduit = produitTrouve.cases.split(",");
+        listeDesCasesProduit.forEach(idDeLaCase => {
+            let idPropre = idDeLaCase.trim(); 
+            let caseSurLePlan = document.getElementById(idPropre);
+            if (caseSurLePlan) {
+                caseSurLePlan.classList.add("trajetAllume");
+            }
+        });
+
+// On fait parler l'ordinateur dans la console (F12) :
+console.log("Nom du rayon cherché :", produitTrouve.rayon);
+console.log("Chemin trouvé dans le dictionnaire :", cheminsDuMagasin[produitTrouve.rayon]);
+
+
+        // C. On allume le chemin pour y aller 🛣️
+        let cheminAffiche = cheminsDuMagasin[produitTrouve.rayon];
+        if (cheminAffiche) { // Si on a bien configuré un chemin pour ce rayon
+            cheminAffiche.forEach(idCaseChemin => {
+                let idPropreChemin = idCaseChemin.trim();
+                let caseCouloir = document.getElementById(idPropreChemin);
+                if (caseCouloir) {
+                    caseCouloir.classList.add("trajetAllume");
+                }
             });
         }
-    });
+
+    } else {
+        // Produit non trouvé
+        messageInfo.textContent = "Produit non trouvé. Essayez un autre mot ! 🤷‍♂️";
+        messageInfo.style.color = "chocolate"; 
+    }
 }
 
-//--------------------------Etiquetage des rayons
-const casesActualitésMur = [
-    "z3676", "z3788", "z3900", "z4012", "z4124", "z4236" 
-]
-etiqueterRayon(casesActualitésMur, "📚 Actualités");
 
+//Validation de la recherche avec la touche "Entrée
+// 1. On cible le champ de texte
+const champSaisieClavier = document.getElementById("saisieUtilisateur");
 
-//LIBRAIRIE----------------------------------------------------
-const casesLittérature = [
-    "z3130", "z3242", "z3355",
-    "z3467", "z3464", "z3463", "z3462", "z3461",
-    "z3580", "z3576", "z3575", "z3574", "z3573",
-    "z3692", "z3805",
-    "z3917", "z3912", "z3911", "z3910", "z3909",
-    "z4030", "z4024", "z4023", "z4022", "z4021",
-    "z4142", "z4255", "z4367", "z4255", "z4367",
-    "z4480", "z4476", "z4475", "z4471", "z4470",
-    "z4592", "z4588", "z4587", "z4583", "z4582",
-    "z4704", "z4700", "z4699", "z4695", "z4694",
-    "z4816", "z4812", "z4811", "z4807", "z4806",
-    "z4928", "z4924", "z4923", "z4919", "z4918",
-    "z5040", "z5036", "z5035", "z5031", "z5030",
-    "z5152", "z5264",
-    "z5376", "z5372", "z5371", "z5370", "z5369",
-    "s5488", "z5484", "z5483", "z5482", "z5481",
-    "z5600", "z5732",
-    "z5824", "z5820", "z5819", "z5818", "z5817", "z5816", "z5815",
-    "z5936", "z5932", "z5931", "z5930", "z5929", "z5928", "z5927",
-    "z6048", "z6160",
-    "z6272", "z6268", "z6267", "z6266", "z6265",
-    "z6384", "z6380", "z6379", "z6378", "z6377",
-    "z6832", "z6831", "z6830", "z6829", "z6828", "z6827", "z6826",
-    "z6825", "z6824", "z6823", "z6822", "z6710"
-];
-etiqueterRayon(casesLittérature, "📚 Littérature");
+// 2. On ajoute un écouteur d'événement pour le clavier
+champSaisieClavier.addEventListener("keydown", (event) => {
+    // 3. On vérifie si la touche appuyée est bien "Entrée"
+    if (event.key === "Enter") {
+        lancerRecherche(); // On déclenche la recherche !
+    }
+});
 
-const casesLiseuses = [
-    "z6260", "z6372", "z6485", "z6597"
-]
-etiqueterRayon(casesLiseuses, "📚");
+// Fonction pour ouvrir la pop-up
+function ouvrirPopup() {
+    document.getElementById("popupRecherche").style.display = "flex";
+}
 
-const casesEP = [
-    "z4206", "z4205", "z4204", "z4203", "z4202", "z4201", "z4200", "z4199",
-    "z4319", "z4431", "z4543", "z4655", "z4767", "z4879", "z4991", "z5103", "z5215", "z5327", "z5439", "z5551",
-    "z4308", "z4420", "z4532", "z4644", "z4756", "z4868", "z4980", "z5092", "z5204", "z5316",
-    "z4540", "z4539", "z4538", "z4537", "z4536", "z4535",
-    "z4652", "z4651", "z4650", "z4649", "z4648", "z4647",
-    "z4764", "z4763",
-    "z4876", "z4875",
-    "z5434", "z5433", "z5432", "z5431",
-    "z5546", "z5545", "z5544", "z5543"
- ]
-etiqueterRayon(casesEP, "☯️ Epanouissement Personnel");
+// Fonction pour fermer la pop-up
+function fermerPopup() {
+    document.getElementById("popupRecherche").style.display = "none";
+}
 
-const casesVoyages = [
-    "z4339", "z4451", "z4563", "z4675",
-    "z4226", "z4225", "z4224", "z4223", "z4222", "z4221", "z4220", "z4219", "z4218",
-    "z4559", "z4671", "z4783", "z4895", "z5007",
-    "z4558", "z4670", "z4782", "z4895", "z5006",
-    "z5456", "z5455", "z5454", "z5453",
-    "z5568", "z5567", "z5566", "z5565"
-]
-etiqueterRayon(casesVoyages, "🗺️ Voyage & Région");
-
-const casesJeunesse = [
-    "z4307", "z4419", "z4531", "z4643", "z4755", "z4867", "z4979", "z5091", "z5203", "z5315",
-    "z4194", "z4193", "z4192", "z4191", "z4190", "z4189", "z4188", "z4187", "z4186", "z4185", "z4184", "z4183",
-    "z4527", "z4639", "z4751", "z4863", "z4975", "z5087", "z5199", "z5311", "z5423",
-    "z4526", "z4638", "z4750", "z4862", "z4974", "z5086", "z5198", "z5310", "z5422",
-    "z4523", "z4635", "z4747", "z4859", "z4971", "z5083", "z5195", "z5307", "z5418",
-    "z4294", "z4406", "z4518", "z4630",
-];
-etiqueterRayon(casesJeunesse, "🎈 Livres Jeunesse");
-
-const casesJeunesseAdo = [
-   "z4293", "z4405", "z4517", "z4741", "z4853",
-   "z4180", "z4179", "z4178", "z4177", "z4176", "z4175", "z4174", "z4173", "z4172",
-   "z4283", "z4395", "z4507", "z4619", "z4731", "z4843", "z4955", "z5067", "z5179", "z5291", "z5403", "z5515", "z5627", "z5739",
-   "z4736", "z4735", "z4734",
-   "z5074", "z5073", "z5072", "z5071",
-   "z5186", "z5185", "z5184", "z8183", 
-   "z5524", "z5523", "z5522", "z5521", "z5520", "z5519",
-   "z5636", "z5635", "z6534", "z5633", "z5632", "z5631"
-];
-etiqueterRayon(casesJeunesseAdo, "⚔️ Livres Jeunesse");
-
-const casesSfFantasy = [
-    "z6258", "z6370",
-    "z6483", "z6595",
-    "z6483", "z6595",
-    "z6708", "z6704", "z6703",
-    "z6820", "z6816", "z6815",
-    "z6933", "z6929", "z6928",
-    "z7045", "z7041", "z7040",
-    "z7158", "z7154", "z7153",
-    "z7270", "z7266", "z7265",
-    "z7382", "z7494"
-];
-etiqueterRayon(casesSfFantasy, "📚 Science Fiction & Fantasy");
-
-const casesPoliciersThrillers = [
-    "z6475", "z6474", "z6471",
-    "z6587", "z6586", "z6583",
-    "z6699", "z6698", "z6695",
-    "z6811", "z6810", "z6807",
-    "z6923", "z6922", "z6919",
-    "z7035", "z7034", "z7031",
-    "z7147", "z7146", "z7143",
-    "z7259", "z7258", "z7255",
-    "z7595", "z7594", "z7593", "z7592",
-    "z7605", "z7604", "z7603", "z7602"
-];
-etiqueterRayon(casesPoliciersThrillers, "📚 Policiers & Thrillers");
-
-const casesCultureSociete = [
-    "z6470", "z6466", "z6465",
-    "z6582", "z6578", "z6577",
-    "z6694", "z6690", "z6689",
-    "z6806", "z6802", "z6801",
-    "z6918", "z6914", "z6913",
-    "z7030", "z7026", "z7025", "z7021",
-    "z7142", "z7138", "z7137", "z7133",
-    "z7254", "z7250", "z7249", "z7245",
-    "z7366", "z7357",
-    "z7478", "z7469",
-    "z7589", "z7588", "z7587", "z7586",
-    "z7585", "z7584", "z7583", "z7582"
-];
-etiqueterRayon(casesCultureSociete, "📚 Culture & Société");
-
-const casesParaSco = [
-    "z6456", "z6455", "z6451",
-    "z6568", "z6567", "z6563",
-    "z6680", "z6679", "z6675",
-    "z6792", "z6791", "z6787",
-    "z6904", "z6903", "z6899",
-    "z7020", "z7016", "z7015", "z7011",
-    "z7132", "z7128", "z7127", "z7123",
-    "z7244", "z7240", "z7239", "z7235",
-    "z7356", "z7347",
-    "z7468", "z7459",
-    "z7579", "z7578", "z7577", "z7576", "z7575",
-    "z7574", "z7573", "z7572"
-];
-etiqueterRayon(casesParaSco, "📖 Parascolaire & Formation");
-
-const casesMangas = [
-    "z6450", "z6447", "z6446", 
-    "z6562", "z6559", "z6558", 
-    "z6674", "z6671", "z6670",
-    "z6786", "z6783", "z6782",
-    "z6898", "z6895", "z6894",
-    "z7010", "z7007", "z7006",
-    "z7122", "z7119", "z7118",
-    "z7234", "z7231", "z7230",
-    "z7458", "z7569", "z7568",
-    "z7567", "z7566", "z7565", "z7564"
-];
-etiqueterRayon(casesMangas, "📚 Mangas");
-
-const casesBd = [
-    "z6442", "z6441", "z6437", "z6436", "z6432", "z6431", "z6428",
-    "z6554", "z6553", "z6549", "z6548", "z6544", "z6543", "z6540",
-    "z6666", "z6665", "z6661", "z6660", "z6656", "z6655", "z6652",
-    "z6778", "z6777", "z6773", "z6772", "z6768", "z6767", "z6764",
-    "z6890", "z6889", "z6885", "z6884", "z6880", "z6879", "z6876",
-    "z7002", "z7001", "z6997", "z6996", "z6992", "z6991", "z6988",
-    "z7114", "z7113", "z7109", "z7108", "z7104", "z7103", "z7100",
-    "z7226", "z7225", "z7221", "z7220", "z7216", "z7215", "z7212",
-    "z7324", "z7436",
-    "z7563", "z7562", "z7561", "z7560", "z7559", "z7558", "z7557", 
-    "z7556", "z7555", "z7554", "z7553", "z7552", "z7551", "z7550",
-    "z7749"
-];
-etiqueterRayon(casesBd, "📚 Bandes Dessinés");
-
-//MVLN ------------------------------------------------------
-const casesMusique = [
-    "z5163", "z6162", "z5161", "z5160", "z5159", "z5158", "z5157", "z5156", "z5155", "z5157",
-    "z5041", "z4929", "z4817", "z4705", "z4593", "z4483",
-    "z4257", "z4145", "z4033", "z3924", "z3809", "z3697",
-    "z3587", "z3588", "z3589", "z3590", "z3591", "z3592", "z3593", "z3594", "z3595", "z3596",
-    "z3929", "z3928", "z4041", "z4040",
-    "z3925", "z3924", "z4037", "z4036",
-    "z4265", "z4264", "z4377", "z4376",
-    "z4261", "z4260", "z4373", "z4372",
-    "z4715", "z4714", "z4713", "z4712", "z4711", "z4710", "z4709", "z4708",
-    "z4827", "z4826", "z4825", "z4824", "z4823", "z4822", "z4821", "z4820"
-];
-etiqueterRayon(casesMusique, "🎶 CD & Vinyles");
-
-const casesVideo = [
-    "z3834", "z3946", "z4058", "z4170", "z4282", "z4394", "z4506", "z4618", "z4730", "z4842", "z4954",
-    "z5066", "z5178", "z5290", "z5402", "z5514", "z5626", "z5738",
-    "z4503", "z4502", "z4501", "z4500",
-    "z4615", "z4614", "z4613", "z4612",
-    "z5063", "z5062", "z5061", "z5060",
-    "z5175", "z5174", "z5173", "z5172",
-    "z5287", "z5286",
-    "z5399", "z5398",
-    "z5511", "z5510",
-    "z5623", "z5627"
-];
-etiqueterRayon(casesVideo, "🎞️ Vidéo");
-
-const casesGaming = [
-   "z6427", "z6539", "z6651", "z6763", "z6875", "z6987", "z7099", "z7211", "z7323", "z7435",
-   "z7546", "z7545", "z7543",
-   "z6416", "z6528", "z6640", "z6752", "z6864", "z6976", "z7088", "z7200",
-   "z6535", "z6647", "z6759", "z6871", "z6983", "z7095",
-   "z6534", "z6646", "z6758", "z6840", "z6952", "z7094"
-];
-etiqueterRayon(casesGaming, "🎮 Gaming");
-
-const casesLicense = [
-    "z6415", "z6413", "z6412", "z6411", "z6410",
-    "z3721", "z3720", "z3719", "z3718", "z3717", "z3716", "z3715",
-    "z4055", "z4054", "z4053", "z4052",
-    "z4167", "z4166", "z4165", "z4164"
-];
-etiqueterRayon(casesLicense, "🪅 Collector");
-
-const casesInstrumentsMusique = [
-    "z5275", "z5274", "z5273", "z5272", "z5271", "z5270", "z5269", "z5268", "z5267",
-    "z5378", "z5490", "z5603", "z5715", "z5828", "z5940",
-    "z6165", "z6277", "z6390", "z6502", "z6615", "z6727",
-    "z5610", "z5609", "z5608", "z5607",
-    "z5722", "z5721", "z5720", "z5719"
-];
-etiqueterRayon(casesInstrumentsMusique, "🎸 Instruments de Musique");
-
-//PCE PAPETERIE ----------------------------------------------------
-const casesInformatiqueAcess = [
-    "z0002", "z0003",
-];
-etiqueterRayon(casesInformatiqueAcess, "💾 Informatiques Accessoires");
-
-const casesCartouchesImprimante = [
-    "z0113", "z0225"
-];
-etiqueterRayon(casesCartouchesImprimante, "🖨️ Cartouches pour Imprimante");
-
-const casesPapiersImprimante = [
-    "z0341", "z0453", "z0565", "z0677",
-    "z0345", "z0457", "z0569", "z0681"
-];
-etiqueterRayon(casesPapiersImprimante, "📄 Papiers pour Imprimante");
-
-const casesPapeterieFantaisie = [
-    "z1133", "z1021", "z0909", "z0797", "z0685", "z0573", "z0461", "z0349", "z0237", "z0125",
-    "z0012", "z0011", "z0010", "z0009", "z0008"
-];
-etiqueterRayon(casesPapeterieFantaisie, "📔 Papeterie & EcritureFantaisie");
-
-const casesBureauAmenagement= [
-    "z0007", "z0006", "z0005", "z0004"
-];
-etiqueterRayon(casesBureauAmenagement, "🗄️ Aménagement Bureau");
-
-const casesAgendas= [
-    "z0346", "z0458", "z0570", "z0682"
-];
-etiqueterRayon(casesBureauAmenagement, "🗄️ Gestion du temps");
-
-const casesBagagerie = [
-    "z0340", "z0452", "z0564", "z676",
-    "z1234", "z1346", "z1458", "z1570"
-];
-etiqueterRayon(casesBagagerie, "💼 Bagagerie");
-
-const casesEcritureLuxe = [
-    "z1682", "z1794"
-];
-etiqueterRayon(casesEcritureLuxe, "✒️ Ecriture de Luxe");
-
-const casesClassement = [
-    "z1906", "z2018", "z2130", "z2242", "z2354",
-    "z2466", "z2466", "z2578", "z2690", "z2802", "2914"
-];
-etiqueterRayon(casesClassement, "🗃️ Classement & Protection");
-
-const casesCahiers = [
-    "z3026", "z3138", "z3250", "z3362",
-    "z3484", "z3483", "z3482", "z3481", "z3480", "z3479", "z3478", "z3477", "z3476", "z3475"
-];
-etiqueterRayon(casesCahiers, "📒 Supports Papiers Scolaires");
-
-const casesEcriture = [
-    "z2698", "z2684", "z2696", "z2695", "z2694", "z2693",
-    "z2586", "z2585", "z2584", "z2583", "z2582", "z2581",
-    "z2250", "z2249", "z2248", "z2247", "z2246", "z2245",
-    "z2138", "z2137", "z2136", "z2135", "z2134", "z2133"
-];
-etiqueterRayon(casesEcriture, "🖋️ Ecriture");
-
-const casesFournitures = [
-    "z1802", "z1801", "z1800", "z1799", "z1798", "z1797",
-    "z1242", "z1241", "z1240", "z1239", "z1238", "z1237"
-];
-etiqueterRayon(casesFournitures, "🖇️ Fournitures & Accessoires");
-
-const casesColoriage = [
-    "z1690", "z1689", "z1688", "z1687", "z1686", "z1685",
-    "z1354", "z1353", "z1352", "z1351", "z1350", "z1349"
-];
-etiqueterRayon(casesColoriage, "🖍️ Dessin & Coloriage");
-
-//PCE JEUNESSE ----------------------------------------------------
-const casesConstruction1Puzzles = [
-    "z2723", "z2835", "z2947", "z3059", "z3171", "z3283",
-    "z3719", "z2831", "z2943", "z3055", "z3167", "z3279",
-    "z2718", "z2830", "z2942", "z3054", "z3166", "z3278",
-    "z3614", "z3726", "z4062", "z4061", "z4060",
-    "z3947", "z3835", "z3723", "z3611",
-    "z2490", "z2602", "z2714", "z2826", "z2938", "z3050", "z3162", "z3274", "z3386", "z3498"
-];
-etiqueterRayon(casesConstruction1Puzzles, "🧩 Jeux de construction & Puzzles");
-
-const casesJeuxSociété = [
-    "z2505", "z2617", "z2729", "z2841", "z2953", "z3065", "z3177", "z3289",
-    "z3401", "z3513", "z3625", "z3737", "z3849", "z3961", "z4072", "z4073",
-    "z4070", "z4069", "z4068", "z4067", "z4066", "z4065", "z4064", "z4063",
-    "z3727", "z3615",
-    "z3731", "z3619", "z3507", "z3395",
-    "z3732", "z3620", "z3508", "z3396", "z3284", "z3172", "z3060", "z2948", "z2836", "z2724"
-];
-etiqueterRayon(casesJeuxSociété, "🎲 Jeux de Société");
-
-const casesCreationEveil = [
-    "z2631", "z2743", "z2855", "z2967", "z3079", "z3191", "z3303", "z3415", "z3751", "z3863", "z3975",
-    "z4086", "z4085", "z4084", "z4083", "z4082", "z4081", "z4080", "z4079", "z4078", "z4077", "z4076", "z7075",
-    "z3962", "z3850", "z3738", "z3626", "z3514", "z3402", "z3290", "z3178", "z3066", "z2954", "z2842", "z2730", "z2618", "z2506",
-    "z2733", "z2845", "z2957", "z3069", "z3181", "z3293", "z3405", "z3517", "z3629", "z3741",
-    "z2734", "z2846", "z2958", "z3070", "z3182", "z3294", "z3406", "z3518", "z3630", "z3742",
-    "z2738", "z2850", "z2962", "z3074", "z3186", "z3298", "z3410", "z3522",
-    "z3739", "z3851", "z2963", "z3075", "z3187", "z3299", "z3411", "z3523"
-];
-etiqueterRayon(casesCreationEveil, "🫟 Ludo Création Eveil");
-
-//PCE LOISIRS CREATIFS ----------------------------------------------------
-
-//PCE BEAUX-ARTS ----------------------------------------------------
-const casesSupportsToiles = [
-    "z2996", "z3108", "z3220", "z3332", "z3444", "z3556", "z3668", "z3780", "z3892", "z4004",
-    "z2768", "z2880", "z2992", "z3104", "z3216", "z3328",
-    "z2767", "z2879", "z2991", "z3103", "z3215", "z3327",
-];
-etiqueterRayon(casesSupportsToiles, "🎨 Châssis & Cartons Toilés");
-
-const casesArtsGraphiques = [
-
-];
-etiqueterRayon(casesArtsGraphiques, "🎨 Arts Graphiques");
-
-const casesInterdit = [
-    "z6944", "z6943", "z6942", "z6941", "z6940", "z6939", "z6938", "z6937", "z6936", "z6935", "z6934",
-    "z7056", "z7055", "z7054", "z7053", "z7052", "z7051", "z7050", "z7049", "z7048", "z7047", "z7045",
-    "z7168", "z7167", "z7166", "z7165", "z7164", "z7163", "z7162", "z7161", "z7160", "z7159",
-    "z7280", "z7279", "z7278", "z7277", "z7276", "z7275", "z7274", "z7273", "s7272", "z7271",
-    "z7392", "z7391", "z7390", "z7389", "z7388", "z7387", "z7386", "z7385", "z7384", "z7383",
-    "z7504", "z7503", "z7502", "z7501", "z7500", "z7499", "z7498", "z7497", "z7496", "z7495",
-    "z7616", "z7615", "z7614", "z7613", "z7612", "z7611", "z7610", "z7609", "z7608", "z7607", "z7606",
-    "z6496", "z6608", "z6720",
-    "z7599", "z7598", "z7597", "z7596",
-    "z7312", "z7424",
-    "z7542", "z7541", "z7540", "z7539", "z7538", "z7537", "z7536", "z7536",
-    "z6527", "z6639", "z6751", "z6863", "z6975", "z7087", "z7199", "z7311", "z7423", "z7535",
-    "z6526", "z6638", "z6750", "z6862", "z6974", "z7086", "z7198", "z7310", "z7422", "z7534",
-    "z6525", "z6637", "z6749", "z6861", "z6973", "z7085", "z7197", "z7309", "z7421", "z7533",
-    "z6524", "z6636", "z6748", "z6860", "z6972", "z7084", "z7196", "z7308", "z7420", "z7532",
-    "z6523", "z6635", "z6747", "z6859", "z6971", "z7083", "z7195", "z7307", "z7419", "z7531",
-    "z6522", "z6634", "z6746", "z6858", "z6970", "z7082", "z7194", "z7306", "z7418", "z7530",
-    "z6521", "z6633", "z6745", "z6857", "z6969", "z7081", "z7193", "z7305", "z7417", "z7529",
-    "z6520", "z6632", "z6744", "z6856", "z6968", "z7080", "z7192", "z7304", "z7416", "z7528",
-    "z6519", "z6631", "z6743", "z6855", "z6967", "z7079", "z7191", "z7303", "z7415", "z7527",
-    "z6518", "z6630", "z6742", "z6854", "z6966", "z7078", "z7190", "z7302", "z7414", "z7526",
-    "z6517", "z6629", "z6741", "z6853", "z6965", "z7077", "z7189", "z7301", "z7413", "z7525",
-    "z6516", "z6628", "z6740", "z6852", "z6964", "z7076", "z7188", "z7300", "z7412", "z7524",
-    "z6515", "z6627", "z6739", "z6851", "z6963", "z7075", "z7187", "z7299", "z7411", "z7523",
-    "z6514", "z6626", "z6738", "z6850", "z6962", "z7074", "z7186", "z7298", "z7410", "z7522",
-    "z6513", "z6625", "z6737", "z6849", "z6961", "z7073", "z7185", "z7297", "z7409", "z7521",
-    "z6512", "z6624", "z6736", "z6848", "z6960", "z7072", "z7184", "z7296", "z7408", "z7520",
-    "z6735", "z6847", "z6959", "z7071", "z7183", "z7295", "z7407", "z7519",
-    "z6858", "z7070", "z7182", "z7294", "z7406", "z7518",
-    "z7181", "z7293", "z7405", "z7517",
-    "z7180", "z7292", "z7404", "z7516",
-    "z7403", "z7515",
-    "z7402",
-    "z7289", "z7176", "z7064", "z6951", "z6839",
-    "z1009", "z0897", "z0785", "z0673",
-    "z0049", "z0161", "z0273", "z0385", "z0497",
-    "z0050", "z0162", "z0274", "z0386",
-    "z0051", "z0163", "z0275", "z0387",
-    "z0052", "z0164", "z0276", "z0388",
-    "z0054", "z0166", "z0278", "z0390",
-    "z0055", "z0167", "z0279", "z0391",
-    "z0056", "z0168", "z0280", "z0392",
-    "z0057", "z0169", "z0281", "z0393",
-    "z0058", "z0170", "z0282", "z0394",
-    "z0059", "z0171", "z0283", "z0395",
-    "z0060", "z0172", "z0284", "z0396",
-    "z0061", "z0173", "z0285", "z0397",
-    "z0062", "z0174", "z0286", "z0398",
-    "z0063", "z0175", "z0287", "z0399",
-    "z0064", "z0176", "z0288", "z0400",
-    "z0065", "z0177", "z0289", "z0401",
-    "z0066", "z0178", "z0290", "z0402",
-    "z0067", "z0179", "z0291", "z0403",
-    "z0068", "z0180", "z0292", "z0404",
-    "z0069", "z0181", "z0293", "z0405",
-    "z0070", "z0182", "z0294", "z0406",
-    "z0071", "z0183", "z0295", "z0407",
-    "z0072", "z0184", "z0296", "z0408",
-    "z0073", "z0185", "z0297", "z0409",
-    "z0074", "z0186", "z0298", "z0410",
-    "z0075", "z0187", "z0299", "z0411",
-    "z0076", "z0188", "z0300", "z0412",
-    "z0077", "z0189", "z0301", "z0413",
-    "z0078", "z0190", "z0302", "z0414", "z0526",
-    "z0079", "z0191", "z0303", "z0415", "z0527",
-    "z0080", "z0192", "z0304", "z0416", "z0528",
-    "z0081", "z0193", "z0305", "z0417", "z0529",
-    "z0082", "z0194", "z0306", "z0418", "z0530",
-    "z0083", "z0195", "z0307", "z0419", "z0531",
-    "z0084", "z0196", "z0308", "z0420", "z0532",
-    "z0085", "z0197", "z0309", "z0421", "z0533",
-    "z0086", "z0198", "z0310", "z0422", "z0534",
-    "z0087", "z0199", "z0311", "z0423", "z0535",
-    "z0088", "z0200", "z0312", "z0424", "z0536",
-    "z0089", "z0201", "z0313", "z0425", "z0537",
-    "z0090", "z0202", "z0314", "z0426", "z0538",
-    "z0091", "z0203", "z0315", "z0427", "z0539",
-    "z0092", "z0204", "z0316", "z0428", "z0540",
-    "z0093", "z0205", "z0317", "z0429", "z0541", "z0653", "z0765",
-    "z0094", "z0206", "z0318", "z0430", "z0542", "z0654", "z0766", "z0878", "z0990", "z1102", "z1214",
-    "z0095", "z0207", "z0319", "z0431", "z0543", "z0655", "z0767", "z0879", "z0991", "z1103", "z1215", "z1327", "z1439", "z1551", "z1663", "z1775", "z1887", "z1999",
-    "z0096", "z0208", "z0320", "z0432", "z0544", "z0656", "z0768", "z0880", "z0992", "z1104", "z1216", "z1328", "z1440", "z1552", "z1664", "z1776", "z1888", "z2000",
-    "z0097", "z0209", "z0321", "z0433", "z0545", "z0557", "z0769", "z0881", "z0993", "z1105", "z1217", "z1329", "z1441", "z1553", "z1665", "z1777", "z1889", "z2001",
-    "z0098", "z0210", "z0322", "z0434", "z0546", "z0558", "z0770", "z0882", "z0994", "z1106", "z1218", "z1330", "z1442", "z1554", "z1666", "z1778", "z1890", "z2002",
-    "z3131", "z3243",
-    "z3356", "z3468",
-    "z3581", "z3693",
-    "z3806", "z3918",
-    "z4031", "z4143",
-    "z4256", "z4368"
-]
-etiqueterRayon(casesInterdit, "⛔");
+// Enregistrement du Service Worker pour rendre l'application installable
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+        .then(() => console.log("Application mobile prête à être installée !"))
+        .catch((err) => console.error("Erreur application mobile :", err));
+}
